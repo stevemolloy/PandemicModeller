@@ -1,9 +1,12 @@
 class Node:
+    '''
+    The most basic element in the class hierarchy that will define
+    the population tree of the model
+    '''
     def __init__(self):
         self.children = []
         self.outgoing = []
         self.parent = None
-        self.data = None
 
     def addChild(self, child):
         child.parent = self
