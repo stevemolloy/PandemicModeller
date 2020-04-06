@@ -40,10 +40,13 @@ class HouseHold(Node):
 
     @property
     def fatality_rate(self):
-        kids = self.kids.D
-        adults = self.adults.D
-        retirees = self.retirees.D
-        return (kids + adults + retirees) / self.population
+        return self.number_dead / self.population
+
+    @property
+    def number_dead(self):
+        return sum(i.number_dead for i in [
+                self.kids, self.adults, self.retirees
+            ])
 
     def __repr__(self):
         classname = self.__class__.__name__
@@ -54,7 +57,26 @@ class HouseHold(Node):
 
 
 class Neighbourhood(Node):
-    pass
+    'A collection of HouseHolds'
+    def __init__(self, households):
+        super().__init__()
+        self.households = households
+
+    @property
+    def population(self):
+        return sum(i.population for i in self.households)
+
+    @property
+    def number_sick(self):
+        return sum(i.number_sick for i in self.households)
+
+    @property
+    def number_dead(self):
+        return sum(i.number_dead for i in self.households)
+
+    @property
+    def fatality_rate(self):
+        return self.number_dead / self.population
 
 
 class UrbanArea(Node):
@@ -81,6 +103,10 @@ class SmallGroup:
     def number_immue(self):
         'Total recovered plus total dead'
         return self.R + self.D
+
+    @property
+    def number_dead(self):
+        return self.D
 
     @property
     def fatality_rate(self):
